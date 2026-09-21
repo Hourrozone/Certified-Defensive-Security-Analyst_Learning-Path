@@ -1,0 +1,150 @@
+## Cyber Kill Chain
+
+The Kill Chain is a 7-stage model that maps how an attacker goes from "choosing a target" to "achieving their goal." Your job as a SOC analyst is to stop them as early as possible.
+
+<img width="2937" height="384" alt="image" src="https://github.com/user-attachments/assets/e259259d-97f0-44d2-9f83-baf861aa2f80" />
+
+### 1. Reconnaissance (Recon)
+
+The attacker picks a target and collects information about it.
+
+* **Passive recon:** No direct contact with the target. Examples include browsing LinkedIn, job ads, company websites, social media. Job ads are goldmines, they reveal what antivirus, OS, and tech the company uses.
+* **Active recon:** Directly "poking" the target. Examples include scanning IP addresses, probing web apps for open ports and services.
+
+<img width="1208" height="657" alt="image" src="https://github.com/user-attachments/assets/0c5b8273-aa93-4054-b58d-dc44413cca9e" />
+
+### 2. Weaponize
+
+The attacker builds the malware or exploit they'll use.
+
+* The malware is kept small and hard to detect, designed to bypass antivirus and EDR (Endpoint Detection & Response) tools.
+* **Main Goal:** Gain remote access into a machine, survive reboots (persistence), and download additional tools later.
+
+### 3. Delivery
+
+The weapon is sent to the victim.
+
+* **Phishing emails:** Sent with malicious attachments or links to fake/malicious pages.
+* **Fake websites:** Serving an exploit or stealing credentials by mimicking a legitimate site.
+* **Phone calls:** Social engineering to trick the victim into running the payload themselves.
+* **Physical delivery:** USB drives left around on purpose.
+
+> 🚨 **Key Point:** Attackers design payloads so the victim only needs to double-click to trigger them. On Windows, common file types include `.bat`, `.cmd`, `.vbs`, `.js`, and `.hta`.
+
+### 4. Exploitation
+
+The payload is triggered and code runs on the victim's machine. This is the moment the attacker gains access or control.
+
+### 5. Installation
+
+The attacker establishes a foothold, creating an entry point that keeps them inside the machine.
+
+#### Common Tools Used:
+
+* **Dropper:** A small piece of code that installs and launches the main malware (functions as the "installer").
+* **Backdoor:** Malware that gives the attacker ongoing, hidden access to the machine even after the initial breach.
+* **Rootkit:** Malware that hides itself (and other malware) from antivirus and security tools.
+
+### 6. Command & Control (C2)
+
+The attacker sets up remote control over the compromised machine.
+
+* They can now send commands and receive data from the infected machine.
+* Advanced attackers install multiple variants of their malware across the network, if one gets caught, they still have other ways back in.
+
+### 7. Action on Objectives
+
+The attacker does what they came to do.
+
+* **Data exfiltration:** Stealing sensitive/confidential data.
+* **Ransomware deployment:** Encrypting all data on endpoints and servers, then demanding payment to restore access (paying is not recommended, as there is no guarantee you get your data back).
+* Other goals vary per attacker.
+
+---
+
+### 🎯 Critical Points to Remember
+
+* **Attackers don't follow a straight line:** After the Installation stage, they often loop back to Recon, looking for more internal targets, deeper access, and more vulnerabilities to exploit. The Kill Chain is a model, not their actual fixed workflow.
+* **Your goal is to stop them early:** The earlier in the chain you detect and stop an attacker, the less damage they can do. Stopping them at Recon or Delivery is far better than catching them at Action.
+
+---
+
+## 🛡️ MITRE ATT&CK Framework
+
+MITRE ATT&CK is a structured knowledge base of real attacker behavior. Think of it as a detailed library of "how attackers actually do things," built from observed real-world attacks.
+
+It works alongside the Kill Chain, Kill Chain shows you the stages, ATT&CK shows you the specific methods used at each stage.
+
+### 3 Levels of Detail
+
+#### 1. Tactic (The "What" Goal)
+
+High-level objective the attacker wants to achieve at that stage.
+
+* **Initial Access:** Get into the network
+* **Persistence:** Stay in the network after reboots
+* **Privilege Escalation:** Get higher permissions (e.g., `admin` / `SYSTEM`)
+
+#### 2. Technique (The "How" Method)
+
+The specific method used to achieve a tactic. Each technique has a unique ID.
+
+* `T1105` - **Ingress Tool Transfer:** Attacker downloads additional tools onto the victim machine using built-in OS commands like `wget` or `curl`
+* `T1021` - **Remote Services:** Attacker moves through the network using protocols like RDP, SSH, or SMB
+
+#### 3. Sub-technique (The "Exact Implementation")
+
+A more specific version of a technique, narrowing down exactly which variant was used. Sub-technique IDs extend the parent: `T1003` → `T1003.001`
+
+* `T1003.001` - **LSASS Memory:** Attacker dumps credentials (usernames/passwords) directly from the `LSASS` process in memory (requires `admin` / `SYSTEM` level access first)
+* `T1021.002` - **SMB/Windows Admin Shares:** Attacker moves laterally by accessing Windows shared folders using stolen valid credentials
+
+> 💡 **Why Sub-techniques Matter:**  
+> Instead of reporting "we detected credential dumping" (vague), you can say:  
+>  
+> `"We detected T1003.001 — LSASS memory dumping"`  
+>  
+> This tells your team exactly what happened, which makes detection rules, investigation, and reporting far more precise.
+
+---
+
+## 🔺 Pyramid of Pain
+
+The Pyramid of Pain answers one question: **How much does it hurt the attacker when you block something?**
+
+The higher up the pyramid, the harder it is for the attacker to adapt, and the more effective your defense becomes.
+
+#### Why the Bottom Levels Are Weak Defenses
+
+Blocking a malicious IP (`MITRE T1071` - C2 communication) only slightly slows the attacker. They just switch to a new C2 server. Same with file hashes, changing one byte in the code alters the hash completely. These are still worth doing, but don't rely on them alone.
+
+#### Why TTPs Are the Strongest Defense
+
+TTPs = **Tactics, Techniques, and Procedures**, the attacker's actual behavior and methods.
+
+If you detect and block how they operate, they can't just swap one value. They have to fundamentally change their entire approach.
+
+* **Detecting PowerShell abuse (`T1059`):** Forces them to find a different execution method
+* **Detecting process injection (`T1055`):** Forces them to change how they run malicious code in memory
+
+This provides maximum pain for the attacker.
+
+#### How This Connects to MITRE ATT&CK
+
+Host artifacts map directly to specific ATT&CK techniques, e.g., `T1547.001` (Registry Run Keys) is a host artifact that's harder to change than an IP.
+
+As a SOC analyst, mapping indicators to ATT&CK techniques lets you:
+
+* **Understand attacker intent:** What are they trying to do next?
+* **Prioritize alerts:** Techniques targeting high-value assets get attention first
+* **Take the right action:** ATT&CK includes mitigation and containment steps per technique, so you know how to disrupt that specific behavior
+
+> 📌 **Key Takeaway:**
+> * Hash/IP blocking = easy for attackers to bypass.
+> * TTP-based detection = forces attackers to rebuild their playbook.
+> 
+> Aim to detect behavior, not just indicators. The higher up the pyramid your detections live, the more resilient your defense is.
+> * Hash/IP blocking = easy for attackers to bypass.
+> * TTP-based detection = forces attackers to rebuild their playbook.
+> 
+> Aim to detect behavior, not just indicators. The higher up the pyramid your detections live, the more resilient your defense is.
