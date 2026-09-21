@@ -1,215 +1,97 @@
 🚨 Incident Handling Module
+Incident Handling Definition & Scope
 
-📌 Incident Handling is the process of identifying, analyzing, containing, eradicating, and recovering from security incidents.
+An event is an action occurring in a system or network. Examples of events include:
 
-📖 Incident Handling Definition & Scope
+A user sending an email.
 
-An event is an action occurring in a system or network.
+A mouse click.
 
-💡 Examples of Events
+A firewall allowing a connection request.
 
-📧 A user sending an email
+Different Types of Real-World Incidents
+🚨 Leaked Credentials
+<details> <summary><strong>Colonial Pipeline Ransomware Attack</strong></summary> <br>
 
-🖱️ A mouse click
+The Colonial Pipeline, a major American oil pipeline system, fell victim to a ransomware attack. This attack originated from a breached employee's personal password, likely found on the dark web, rather than a direct attack on the company's network.
 
-🔥 A firewall allowing a connection request
-
-Note: Not every event is a security incident. An incident occurs when an event negatively affects the confidentiality, integrity, or availability (CIA) of information or systems.
-
-🌍 Different Types of Real-World Incidents
-🚨 1. Leaked Credentials
-<details> <summary><strong>🔑 Colonial Pipeline Ransomware Attack</strong></summary> <br>
-
-The Colonial Pipeline, a major American oil pipeline system, fell victim to a ransomware attack.
-
-The attack originated from a compromised employee password rather than a direct attack on the company's network. The attackers gained access using credentials associated with an inactive VPN account that did not have Multi-Factor Authentication (MFA) enabled.
-
-🔍 Key Factors
-
-🔑 Compromised credentials
-
-🌐 Inactive VPN account
-
-❌ No MFA
-
-🕵️ Credential exposure
+The attackers gained access to the company's systems using a compromised password for an inactive VPN (Virtual Private Network) account, which did not have Multi-Factor Authentication (MFA) enabled.
 
 </details>
-🚨 2. Default / Weak Credentials
-<details> <summary><strong>🤖 Mirai Botnet (2016)</strong></summary> <br>
+🚨 Default / Weak Credentials
+<details> <summary><strong>Mirai Botnet (2016)</strong></summary> <br>
 
-The Mirai botnet scanned for IoT devices using factory or default credentials such as admin/admin and conscripted them into a massive DDoS botnet.
+The Mirai botnet scanned for IoT devices using factory or default credentials (e.g., admin/admin) and conscripted them into a massive DDoS botnet.
 
-This led to large-scale DDoS disruptions affecting companies such as Dyn and OVH, with hundreds of thousands of devices infected.
+This led to large-scale DDoS disruptions affecting companies like Dyn and OVH, with hundreds of thousands of devices infected.
 
-🔍 Root Cause
+The root cause was the devices being shipped with unchanged default credentials and poor remote access security.
 
-🔑 Unchanged default credentials
-
-🌐 Exposed IoT devices
-
-⚙️ Poor remote-access security
-
-🌊 DDoS activity
-
-</details> <details> <summary><strong>🔐 LogicMonitor Incident (2023)</strong></summary> <br>
+</details> <details> <summary><strong>LogicMonitor Incident (2023)</strong></summary> <br>
 
 Some LogicMonitor customers were compromised because the vendor issued weak default passwords to customer accounts.
 
-Affected customers experienced follow-on ransomware incidents or unauthorized access.
-
-🔍 Root Cause
-
-🔑 Weak/default passwords
-
-⚠️ Delayed password hardening
-
-🏢 Vendor-side security controls
+Affected customers experienced follow-on ransomware incidents or unauthorized access. The root cause involved vendor-assigned weak/default credentials and delayed enforcement of password hardening.
 
 </details>
-🚨 3. Outdated Software / Unpatched Systems
-<details> <summary><strong>🐛 Equifax (2017) Breach</strong></summary> <br>
+🚨 Outdated Software / Unpatched Systems
+<details> <summary><strong>Equifax (2017) Breach</strong></summary> <br>
 
-Attackers exploited a known Apache Struts vulnerability (CVE-2017-5638) in Equifax's web application.
+Attackers exploited a known Apache Struts vulnerability (CVE-2017-5638) in Equifax’s web application.
 
-The breach exposed the personal data of approximately 143–147 million people, resulting in significant regulatory and legal consequences.
+This breach exposed the personal data of approximately 143–147 million people, leading to major regulatory and legal fallout.
 
-🔍 Root Cause
+The incident occurred due to a failure to apply a publicly released patch in a timely manner.
 
-🐛 Known vulnerability
+</details> <details> <summary><strong>WannaCry (2017)</strong></summary> <br>
 
-🔧 Missing security patch
+The WannaCry ransomware spread as a worm using the SMB EternalBlue exploit, affecting more than 200,000 systems across over 150 countries.
 
-⏳ Delayed patching
-
-</details> <details> <summary><strong>🦠 WannaCry (2017)</strong></summary> <br>
-
-The WannaCry ransomware spread as a worm using the SMB EternalBlue exploit.
-
-It affected more than 200,000 systems across more than 150 countries. High-profile impacts included hospitals and enterprises.
-
-🔍 Root Cause
-
-🐛 Unpatched Windows systems
-
-💻 SMB exposure
-
-⚠️ Missing MS17-010 patch
+High-profile impacts included hospitals and enterprises. This incident was due to unpatched Windows systems, despite the MS17-010 patch being available before the outbreak.
 
 </details>
-🚨 4. Rogue Employee / Insider Threat
-<details> <summary><strong>👤 Cash App / Block Inc.</strong></summary> <br>
+🚨 Rogue Employee / Insider Threat
+<details> <summary><strong>Cash App / Block Inc. (2021 Disclosure; Public 2022 Notice)</strong></summary> <br>
 
 A former employee accessed the personal information of millions of Cash App users, as reported in company disclosures.
 
-Approximately 8.2 million current and former customers were potentially impacted.
+Approximately 8.2 million current and former customers were potentially impacted, leading to regulatory scrutiny and settlements.
 
-🔍 Root Cause
-
-👤 Insider access
-
-🔑 Legitimate employee credentials
-
-🛡️ Insufficient internal controls
-
-🔍 Insufficient monitoring
+The root cause was the abuse of legitimate employee access and insufficient internal controls and monitoring.
 
 </details>
-🚨 5. Phishing / Social Engineering
-<details> <summary><strong>🎣 Industry Trend & Representative Data</strong></summary> <br>
+🚨 Phishing / Social Engineering
+<details> <summary><strong>Industry Trend & Representative Data</strong></summary> <br>
 
-Phishing is a common attack vector used to:
+Phishing is a pervasive vector used to obtain credentials, deliver malware, or trick users into enabling remote access.
 
-🔑 Obtain credentials
+It frequently leads to account compromise, fraud, and network footholds. A significant portion of breaches over multiple years are linked to phishing.
 
-🦠 Deliver malware
+</details> <details> <summary><strong>U.S. Interior Department Phishing Attack</strong></summary> <br>
 
-👤 Trick users
+Attackers used an "evil twin" technique to trick individuals into connecting to a fake Wi-Fi network, allowing hackers to steal credentials and access the network.
 
-🌐 Establish network access
+This incident revealed a lack of secure wireless network infrastructure and insufficient security measures, including weak user authentication and inadequate network testing.
 
-💰 Facilitate fraud
+</details> <details> <summary><strong>2020 Twitter Account Hijacking</strong></summary> <br>
 
-Phishing frequently leads to account compromise, fraud, and initial network access.
+In 2020, many high-profile Twitter accounts were compromised by outside parties to promote a bitcoin scam.
 
-</details> <details> <summary><strong>📡 U.S. Interior Department Phishing Attack</strong></summary> <br>
-
-Attackers used an "evil twin" technique to trick individuals into connecting to a fake Wi-Fi network.
-
-This allowed attackers to steal credentials and potentially gain access to the network.
-
-🔍 Security Issues
-
-📡 Rogue wireless network
-
-🔑 Credential theft
-
-⚠️ Weak authentication
-
-🧪 Insufficient security testing
-
-</details> <details> <summary><strong>🐦 2020 Twitter Account Hijacking</strong></summary> <br>
-
-In 2020, several high-profile Twitter accounts were compromised to promote a bitcoin scam.
-
-Attackers gained access to Twitter's administrative tools and used them to modify accounts and publish posts.
-
-The attackers appeared to have used social engineering involving Twitter employees to gain access to internal tools.
-
-🔍 Attack Characteristics
-
-👤 Social engineering
-
-🔑 Credential compromise
-
-🛠️ Administrative-tool abuse
-
-📱 Account takeover
+Attackers gained access to Twitter's administrative tools, allowing them to alter accounts and post tweets directly. They appeared to have used social engineering to gain access to the tools via Twitter employees.
 
 </details>
-🚨 6. Supply-Chain Attack
-<details> <summary><strong>🔗 SolarWinds Orion (2020)</strong></summary> <br>
+🚨 Supply-Chain Attack
+<details> <summary><strong>SolarWinds Orion (2020)</strong></summary> <br>
 
-Nation-state actors compromised the SolarWinds build/release environment and injected a malicious backdoor into Orion updates.
+Nation-state actors compromised the SolarWinds build/release environment and injected a malicious backdoor into Orion updates, which were distributed to thousands of customers.
 
-The compromised updates were distributed to thousands of customers, resulting in widespread unauthorized access and espionage activity across government and private-sector organizations.
-
-🔍 Attack Characteristics
-
-🔗 Supply-chain compromise
-
-🏗️ Build-environment compromise
-
-🦠 Malicious software update
-
-🌐 Large-scale distribution
-
-🔍 Long-term detection and remediation
+This caused wide-reaching espionage and unauthorized access across government and private sectors, leading to protracted detection and remediation efforts.
 
 </details>
-📋 Standard Incident Reports
-📄 Report	🔗 Resource
-🔍 DFIR Report	Confluence Exploit Leads to LockBit Ransomware
+Standard Incident Reports
+Report	Resource
+DFIR Report	Confluence Exploit Leads to LockBit Ransomware
 
-🦠 Cybereason Research	ChaeS E-Commerce Malware Research
+Cybereason Research	Chaes E-Commerce Malware (PDF)
 
-🛡️ Palo Alto Unit 42	Global Incident Response Report
-🔄 Incident Response Lifecycle
-🔍 Identify
-    ↓
-🧪 Analyze
-    ↓
-🛑 Contain
-    ↓
-🧹 Eradicate
-    ↓
-🔄 Recover
-    ↓
-📚 Lessons Learned
-
-<div align="center">
-🛡️ Incident Handling
-
-Identify → Analyze → Contain → Eradicate → Recover → Learn
-
-</div>
+Palo Alto Unit 42	Global Incident Response Report
