@@ -2,6 +2,8 @@ SIEM Use Case Development
 What Is A SIEM Use Case?
 Utilizing SIEM use cases is a fundamental aspect of crafting a robust cybersecurity strategy, as they enable the effective identification and detection of potential security incidents. Use cases are designed to illustrate specific situations where a product or service can be applied, and they can range from general scenarios, such as failed login attempts, to more complex ones like detecting a ransomware outbreak.
 
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/58d358ff-7f87-4501-bf3a-fa535a135b59" />
+
 For instance, consider a situation where a user named Rob experiences 10 consecutive failed authentication attempts. These events could originate from the actual user who forgot their credentials or from a malicious actor trying to brute force their way into the account. In either case, these 10 events are sent to the SIEM system, which then correlates them into a single event and triggers an alert to the SOC team under the "brute force" use case category.
 
 Based on the log data generated within the SIEM, the SOC team is then responsible for taking appropriate action. This example demonstrates just one of the many possible use cases that can be developed, ranging from straightforward to more intricate situations.
@@ -14,7 +16,8 @@ The following critical stages must be considered when developing any use cases:
 
 The following critical stages must be considered when developing any use cases:
 
-[Diagram of Usecase Lifecycle with stages: Requirements, Data Points, Log Validation, Design, Implementation, Documentation, Onboarding, Testing, Fine Tuning.](https://cdn.services-k8s.prod.aws.htb.systems/content/modules/211/usecase2.png)
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/af3a729c-48aa-49e8-8d66-da996baec8bf" />
+
 
 1. `Requirements`: Comprehend the purpose or necessity of the use case, pinpointing the specific scenario for which an alert or notification is needed. Requirements can be proposed by customers, analysts, or employees. For instance, the goal might be to design a detection use case for a brute force attack that triggers an alert after 10 consecutive login failures within 4 minutes.
 2. `Data Points`: Identify all data points within the network where a user account can be used to log in. Gather information about the data sources that generate logs for unauthorized access attempts or login failures. For example, data might come from Windows machines, Linux machines, endpoints, servers, or applications. Ensure logs capture essential details like user, timestamp, source, destination, etc.
@@ -45,7 +48,7 @@ The following critical stages must be considered when developing any use cases:
 
 Now, let's explore a practical example using the Elastic stack as a SIEM solution to help understand how to map each of the above points.
 
-[Dashboard showing MSBuild started by Office apps, with high severity and risk score 73. Includes MITRE ATT&CK tactics and custom query details.](https://cdn.services-k8s.prod.aws.htb.systems/content/modules/211/us1.png)
+<img width="2556" height="890" alt="image" src="https://github.com/user-attachments/assets/aa20fece-3ef1-4264-a448-0113b2d6b6f2" />
 
 In the provided snapshot (detection use case), we need to determine our risk and the target of our monitoring efforts.
 
@@ -83,7 +86,8 @@ For rule fine-tuning, it is essential to understand the conditions that may trig
 
 Example 1 discussed a high-severity detection use case and rule. Now, let's examine a medium-severity use case using a SIEM solution to better understand how each pointer contributes to the effectiveness of use cases.
 
-[Dashboard showing MSBuild making network connections with medium severity and risk score 47. Includes MITRE ATT&CK execution details and custom query information.](https://cdn.services-k8s.prod.aws.htb.systems/content/modules/211/us2.png)
+<img width="2562" height="860" alt="image" src="https://github.com/user-attachments/assets/7e06bc45-abef-4452-8634-93bd136f9d10" />
+
 
 In the given snapshot, we need to determine our risk and what we are trying to monitor.
 
